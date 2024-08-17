@@ -21,4 +21,10 @@ describe('AppComponent', () => {
     expect(app.add('1')).toEqual(1);
     expect(app.add('1,5')).toEqual(6);
   });
+
+  it('should add the numbers correctly when different delimiters are passed', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.add('1\n2,3')).toEqual(6);
+  });
 });
