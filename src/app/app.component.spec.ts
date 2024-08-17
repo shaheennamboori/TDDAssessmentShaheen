@@ -30,4 +30,14 @@ describe('AppComponent', () => {
     expect(app.add('// \n1 2 3')).toEqual(6);
     expect(app.add('//.\n1.2.3')).toEqual(6);
   });
+
+  it('should throw error when negative numbers are passed', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    try {
+      app.add('//,\n-1,2,3');
+    } catch (e: any) {
+      expect(e.message).toEqual('negative numbers not allowed -1');
+    }
+  });
 });

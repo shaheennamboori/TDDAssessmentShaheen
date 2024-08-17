@@ -24,14 +24,24 @@ Input: "//\/////\n2\n3\n4"
     if (numbers.length <= 0) {
       return 0;
     }
-
-    return numbers.reduce(
-      (accumulator, currentNumber) => (accumulator += currentNumber),
-      0
-    );
+    let negativeNumbers: number[] = [];
+    let sum = 0;
+    numbers.forEach((number) => {
+      if (number < 0) {
+        negativeNumbers.push(number);
+      }
+      sum += number;
+    });
+    if (negativeNumbers.length > 0) {
+      throw new Error(
+        `negative numbers not allowed ${negativeNumbers.join(',')}`
+      );
+    }
+    return sum;
   }
 
   private extractDelimitersAndNumbers(input: string): number[] {
+    // Extract delimiter from the input string
     let expression = input.match(this.DelimiterIdentifier);
     if (expression) {
       // Remove the delimiter part from the input
