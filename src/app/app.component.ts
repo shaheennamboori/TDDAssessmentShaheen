@@ -6,23 +6,44 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  /* This regex matches any newline character (\n) or comma (,). 
-  Positive Case:
-  Input: "apple,orange\nbanana"
-  Negative Case:
-  Input: "apple orange banana"*/
-  private readonly Delimiters = /[\n,]/;
+  /* 
+Positive Case:
+Input: "// \n1 2 3"
+- The delimiter is a whitespace character .
+
+Negative Case:
+Input: "//\/////\n2\n3\n4"
+- The regex captures the delimiter incorrectly.
+*/
+  private readonly DelimiterIdentifier = /^\/\/(.|\s*)\n/;
 
   // Add method
   public add(number: string): number {
-    if (number.length <= 0) {
+    // Extract the numbers from the input
+    let numbers = this.extractDelimitersAndNumbers(number);
+    if (numbers.length <= 0) {
       return 0;
     }
-    let numbers = number.split(this.Delimiters);
 
     return numbers.reduce(
-      (accumulator, currentNumber) => (accumulator += parseInt(currentNumber)),
+      (accumulator, currentNumber) => (accumulator += currentNumber),
       0
     );
+  }
+
+  private extractDelimitersAndNumbers(input: string): number[] {
+    let expression = input.match(this.DelimiterIdentifier);
+    if (expression) {
+      // Remove the delimiter part from the input
+      const numbersString = input.replace(this.DelimiterIdentifier, '');
+
+      // Check for new line delimiter
+      if (expression[1] === '') {
+        return numbersString.split('\n').map(Number);
+      }
+      return numbersString.split(expression[1]).map(Number);
+    }
+
+    return [];
   }
 }
